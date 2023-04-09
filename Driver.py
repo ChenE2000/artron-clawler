@@ -82,6 +82,18 @@ class Driver:
             "total_auction": td[1].text,
             "dea_ratio": int(td[2].text) / int(td[1].text)
         } 
+
+    def download_auction_work_image(self, wid: str):
+        driver = self.driver
+        url = f"https://tulu.artron.net/wap/NewHdImage/bigpic/art{wid}"
+        driver.get(url)
+        time.sleep(5)
+
+        # find <canvas>
+        canvas = driver.find_element(By.TAG_NAME, "canvas")
+        # save canvas as image
+        canvas.screenshot(f"./images/{wid}.png")
+
     
     def get_auction_work_info(self, wid: str):
         driver = self.driver

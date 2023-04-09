@@ -11,7 +11,8 @@ works = [Work('5127381713'), Work('5127381714')]
 
 for work in works:
     work_info = auction_driver.get_auction_work_info(work.wid)
+    auction_driver.download_auction_work_image(work.wid)
     work.set_basic_info(work_info)
     work.save_to_json()
 
-print(w1)
+# print(w1)
