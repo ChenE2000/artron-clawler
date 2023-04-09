@@ -7,7 +7,7 @@ class Driver:
         self.driver = webdriver.Chrome()
         
     
-    def login(self) -> webdriver.Chrome:
+    def login_auction(self) -> webdriver.Chrome:
         url = "https://passport.artron.net/login"
         self.driver.get(url)
 
@@ -29,10 +29,11 @@ class Driver:
 
         # save cookies and keep waiting
         time.sleep(1)
+
         return self
     
 
-    def get_deal_info(self, aname: str):
+    def get_auction_author_deal_info(self, aname: str) -> dict:
         
         driver = self.driver
         time.sleep(2)
@@ -72,7 +73,9 @@ class Driver:
         # extract 4 <td> in <tr>
         td = tr.find_elements(By.TAG_NAME, "td")
 
-        
+        # td[3].text消除千分位，去掉”万“
+
+        # TODO formatting deal_sum
         return {
             "deal_sum": td[3].text,
             "deal_count": td[2].text,
@@ -80,6 +83,44 @@ class Driver:
             "dea_ratio": int(td[2].text) / int(td[1].text)
         } 
     
+    def get_auction_work_info(self, wid: str):
+        driver = self.driver
+        time.sleep(2)
+        url = f"https://auction.artron.net/paimai-art{wid}"
+        driver.get(url)
+        time.sleep(5)
+
+        # find div with class="productDetailBox"
+        div = driver.find_element(By.CLASS_NAME, "productDetailBox")
+        # print(div.text)
+        # find all dl in div
+        dls = div.find_elements(By.TAG_NAME, "dl")
+        print(dls)
+        # get all dt and dd in dl
+        work_info = {
+            "拍品名称": None,
+            "作者": None,
+            "拍品分类": None,
+            "创作年代": None,
+            "尺寸": None,
+            "估价": None,
+            "成交价": None,
+            "拍卖日期": None,
+            "拍卖公司": None,
+            "拍卖专场": None,
+            "拍卖会": None,
+            "材质": None,
+            "形制": None,
+            "题识": None,
+            "著录": None
+        }
+        for dl in dls:
+            dt = dl.find_element(By.TAG_NAME, "dt")
+            dd = dl.find_element(By.TAG_NAME, "dd")
+            work_info[dt.text] = dd.text
+            # print("=====================================")
+
+        return work_info
 
 
 if __name__ == "__main__":

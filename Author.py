@@ -56,10 +56,3 @@ class Author:
         self.life_span = life_span
         return self
 
-
-
-        
-if __name__ == "__main__":
-    driver = Driver()
-    
-    author = Author("徐悲鸿")
