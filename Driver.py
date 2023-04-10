@@ -2,12 +2,14 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
 
+# selenium log level
+selenium.webdriver.remote.remote_connection.LOGGER.setLevel(logging.WARNING)
 class Driver:
     def __init__(self):
         self.driver = webdriver.Chrome()
         
     
-    def login_auction(self) -> webdriver.Chrome:
+    def login_auction(self):
         url = "https://passport.artron.net/login"
         self.driver.get(url)
 
@@ -133,6 +135,87 @@ class Driver:
             # print("=====================================")
 
         return work_info
+
+    def get_art400_info(self) -> list:
+        print("[LOGS] get art400 info")
+        driver = self.driver
+        time.sleep(2)
+        url = "https://amma.artron.net/artronindex_indexall.php?cbid=1"
+        driver.get(url)
+        time.sleep(5)
+
+        # find table with class="detail-table"
+        table = driver.find_element(By.CLASS_NAME, "detail-table")
+        tbody = table.find_element(By.TAG_NAME, "tbody")
+
+        listArt400 = []
+        # 保存表中2000年-2022共47条记录
+        for trNum in range(47):
+            art400_info = {
+                "季度": None,
+                "上拍数量": None,
+                "成交数量": None,
+                "成交额（万元）": None,
+                "成交率": None,
+                "指数": None
+            }
+            tr = tbody.find_elements(By.TAG_NAME, "tr")[trNum]
+            td = tr.find_elements(By.TAG_NAME, "td")
+            # 保存每条记录的6个字段
+            # print(td[0].text)       #季度
+            # print(td[1].text)       #上拍数量
+            # print(td[2].text)       #成交数量
+            # print(td[3].text)       #成交额
+            # print(td[4].text)       #成交率
+            # print(td[5].text)       #指数
+
+            art400_info["季度"] = td[0].text
+            art400_info["上拍数量"] = td[1].text
+            art400_info["成交数量"] = td[2].text
+            art400_info["成交额（万元）"] = td[3].text
+            art400_info["成交率"] = td[4].text
+            art400_info["指数"] = td[5].text
+            listArt400.append(art400_info)
+
+        return listArt400
+
+
+    def get_art50_info(self):
+        print("[LOGS] get art50 info")
+        driver = self.driver
+        time.sleep(2)
+        url = "https://amma.artron.net/artronindex_exponent1.php?type=2"
+        driver.get(url)
+        time.sleep(5)
+
+        table = driver.find_element(By.CLASS_NAME, "detail-table")
+        tbody = table.find_element(By.TAG_NAME, "tbody")
+
+
+        listArt50 = []
+
+        # 保存表中2000年-2022年共45条记录
+        for trNum in range(45):
+            art50_info = {
+                "季度": None,
+                "重复交易数量": None,
+                "指数": None,
+            }
+            tr = tbody.find_elements(By.TAG_NAME, "tr")[trNum]
+            td = tr.find_elements(By.TAG_NAME, "td")
+            # print(tr.text)
+            # 保存每条记录的6个字段
+            # print(td[0].text)  # 季度
+            # print(td[1].text)  # 重复交易数量
+            # print(td[2].text)  # 指数
+
+            art50_info["季度"] = td[0].text
+            art50_info["重复交易数量"] = td[0].text
+            art50_info["指数"] = td[0].text
+
+            listArt50.append(art50_info)
+
+        return listArt50
 
 
 if __name__ == "__main__":

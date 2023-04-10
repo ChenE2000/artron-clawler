@@ -15,10 +15,9 @@ class Work:
     def set_basic_info(self, basic_info: dict):
         self.basic_info = basic_info
 
-    def save_to_json(self, root_path: str = "./data/"):
+    def save_to_json(self, root_path: str = "./data/works/"):
         path = root_path + self.wid + ".json"
         # TODO: merge all data into one json file
-        with open(path, "w") as f:
-            json.dump(self._to_dict(), f)
-
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(self._to_dict(), f, ensure_ascii=False)
    

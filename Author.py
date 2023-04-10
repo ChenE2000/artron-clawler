@@ -2,7 +2,7 @@ import requests
 import re
 from Driver import Driver
 from selenium.webdriver.common.by import By
-
+import json
 from  bs4 import  BeautifulSoup
 import time
 
@@ -16,8 +16,14 @@ class Author:
         self.session = requests.session()
         self.name = name
         self.author_id = None
-        self.driver = driver
     
+    def _to_dict(self):
+        return {
+            "name": self.name,
+            "author_id": self.author_id,
+            "life_span": self.life_span,
+            "deal_info": self.deal_info
+        }
     
     def get_popularity(self):
         pass
@@ -56,3 +62,13 @@ class Author:
         self.life_span = life_span
         return self
 
+    def set_deal_info(self, deal_info: dict):
+        self.deal_info = deal_info
+        return self
+
+    def save_to_json(self, root_path: str = "./data/authors/"):
+        path = root_path + self.name + ".json"
+        # TODO: merge all data into one json file
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(self._to_dict(), f, ensure_ascii=False)
+        
