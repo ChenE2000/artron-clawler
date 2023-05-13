@@ -1,2 +1,5 @@
 __pycache__
-data
+data/*.json
+data/authors/*.json
+data/works/*.json
+images
