@@ -3,3 +3,4 @@ data/*.json
 data/authors/*.json
 data/works/*.json
 images
+.idea
